@@ -1,40 +1,40 @@
 import express from 'express';
-
 import { Client } from 'basic-ftp';
-
-Data();
 
 async function Data() {
     const client = new Client();
-
-    const app = express();
-
     var data;
     client.ftp.verbose = false;
     try {
         await client.access({
             host: 'eu-central-1.sftpcloud.io',
-            user: '4b1dffe9cdbc4ac1959a6562c36d5702',
-            password: '2LJpMWbNpUlEqMybaUYCMJitnyVKVzgM',
+            user: '1375dcb65a7d4f15816b7f7e2f524d5f',
+            password: 'uPK4bVnGQ46m0NnNhHrNBXytKNVbyLoZ',
             secure: false
         })
-        console.log("Connection successful");
         data = (await client.list()).length;
         client.close()
+        return data;
     } catch (err) {
-        console.log(err);
-    }
-
-    app.get('/api/data', function(req, res) {
-        const count = data;
-        console.log(count);
-        const data1 = {
-            message: count
-        };
-        res.json(data1);
-    });
-
-    app.listen(3000, () => {console.log("Server is listening on port 3000")});
+        return err;
+    }    
 }
 
+const getData = async () => {
+    const result = await Data();
+    return result;
+}
 
+const app = express();
+
+app.get('/api/data', function(req, res) {
+    getData().then(count => {
+        const data = {
+            NumberOfFiles: count
+        };
+        res.json(data);
+    })
+   
+});
+
+app.listen(3000, () => {console.log("Server is listening on port 3000")});
