@@ -28,13 +28,14 @@ const getData = async (addr, user, password) => {
 const app = express();
 
 app.get('/sendData/:address&:user&:password', function(req, res) {
-    console.log(req.params)
+    
     getData(req.params.address, req.params.user, req.params.password).then(count => {
         const data = {
             NumberOfFiles: count
         };
         
         res.json(data);
+        console.log("Number of Files found: ", data.NumberOfFiles)
     })
     
    
