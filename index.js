@@ -32,7 +32,7 @@ const CheckFolder = async (addr, user, password, folderPath) => {
             secure: false
         })
         const response = await client.cd(folderPath);
-        console.log(response.code)
+        console.log("THIS IS THE LOG: ", response.code)
         return response.code
     } catch (err) {
         return err.code;
@@ -69,7 +69,10 @@ router.get('/sendData/:address&:user&:password', function(req, res) {
 router.get('/checkFolder/:address&:user&:password&:folderPath', function(req, res) {
     getFolderData(req.params.address, req.params.user, req.params.password, req.params.folderPath).then(code => {
         console.log(`Checking folder ${req.params.folderPath}: ${code}`);
-        res.send(code);
+        const data = {
+            code: code
+        }
+        res.json(data);
     })
 })
 
