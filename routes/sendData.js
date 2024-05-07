@@ -29,7 +29,7 @@ const getData = async (addr, user, password) => {
 }
 
 
-router.get('/sendData/:address&:user&:password', function(req, res) {
+router.get('/', function(req, res) {
     
     getData(req.params.address, req.params.user, req.params.password).then(count => {
         const data = {
@@ -43,4 +43,4 @@ router.get('/sendData/:address&:user&:password', function(req, res) {
    
 });
 
-module.exports=router;
+export default router;
