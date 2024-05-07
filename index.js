@@ -65,6 +65,7 @@ app.get('/sendData/:address&:user&:password', function(req, res) {
 });
 
 app.get('/checkFolder/:address&user&:password&:folderPath', function(req, res) {
+    console.log('Connection passed');
     getFolderData(req.params.address, req.params.user, req.params.password, req.params.folderPath).then(code => {
         console.log(`Checking folder ${folderPath}: ${code}`);
         res.send(code);
