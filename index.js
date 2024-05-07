@@ -32,6 +32,7 @@ const CheckFolder = async (addr, user, password, folderPath) => {
             secure: false
         })
         const response = await client.cd(folderPath);
+        console.log(response.code)
         return response.code
     } catch (err) {
         return err.code;
