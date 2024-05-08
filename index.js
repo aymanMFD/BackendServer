@@ -24,6 +24,7 @@ const Data = async (addr, user, password, port, folders) => {
         }
         // The total number of files in the server
         folderCount["NumberOfFiles"] = data;
+        console.log(folderCount)
         client.close()
         return folderCount;
     } catch (err) {
