@@ -1,7 +1,7 @@
 import express from 'express';
 import { Client } from 'basic-ftp';
 
-const Data = async (addr, user, password, port) => {
+const Data = async (addr, user, password, port, folders) => {
     const client = new Client();
     var data;
     client.ftp.verbose = false;
@@ -14,8 +14,18 @@ const Data = async (addr, user, password, port) => {
             port: port
         })
         data = (await client.list()).length;
+        let folderCount = {};
+        let fileCountInFolder = 0;
+        for (let i = 0; i < folders.length; i++) {
+            await client.cd(folders[i]);
+            fileCountInFolder = (await client.list()).length;
+            folderCount[folders[i]] = fileCountInFolder;
+            await client.cd("/");
+        }
+        // The total number of files in the server
+        folderCount["NumberOfFiles"] = data;
         client.close()
-        return data;
+        return folderCount;
     } catch (err) {
         return err;
     }    
@@ -34,7 +44,7 @@ const CheckFolder = async (addr, user, password, folderPath, port) => {
             port: port
         })
         const response = await client.cd(folderPath);
-        console.log("THIS IS THE LOG: ", response.code)
+        
         return response.code
     } catch (err) {
         return err.code;
@@ -46,23 +56,20 @@ const getFolderData = async (addr, user, password, folderPath, port) => {
     return result;
 }
 
-const getData = async (addr, user, password, port) => {
-    const result = await Data(addr, user, password, port);
+const getData = async (addr, user, password, port, folders) => {
+    const result = await Data(addr, user, password, port, folders);
     return result;
 }
 
 const app = express();
 const router = express.Router();
 
-router.get('/sendData/:address&:user&:password&:port', function(req, res) {
+router.get('/sendData/:address&:user&:password&:port&:folders', function(req, res) {
     
-    getData(req.params.address, req.params.user, req.params.password, req.params.port).then(count => {
-        const data = {
-            NumberOfFiles: count
-        };
-        
-        res.json(data);
-        console.log("Number of Files found: ", data.NumberOfFiles)
+    getData(req.params.address, req.params.user, req.params.password, req.params.port, req.params.folders).then(folderCount => {
+                
+        res.json(folderCount);
+        console.log(`${req.params.address} total files is: ${folderCount.NumberOfFiles}`)
     })
     
    
