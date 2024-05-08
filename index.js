@@ -68,7 +68,7 @@ router.get('/sendData/:address&:user&:password&:port', function(req, res) {
    
 });
 
-router.get('/checkFolder/:address&:user&:password&:folderPath&:port', function(req, res) {
+router.get('/checkFolder/:address&:user&:password&:port&:folderPath', function(req, res) {
     getFolderData(req.params.address, req.params.user, req.params.password, req.params.folderPath, req.params.port).then(code => {
         console.log(`Checking folder ${req.params.folderPath}: ${code}`);
         const data = {
