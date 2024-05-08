@@ -66,7 +66,7 @@ const router = express.Router();
 
 router.get('/sendData/:address&:user&:password&:port&:folders', function(req, res) {
     
-    getData(req.params.address, req.params.user, req.params.password, req.params.port, req.params.folders).then(folderCount => {
+    getData(req.params.address, req.params.user, req.params.password, req.params.port, (req.params.folders).split(',')).then(folderCount => {
                 
         res.json(folderCount);
         console.log(`${req.params.address} total files is: ${folderCount.NumberOfFiles}`)
