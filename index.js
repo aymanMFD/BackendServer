@@ -124,9 +124,9 @@ router.get('/checkConnection/:address&:user&:password&:port', function(req, res)
 
 app.use('/', router);
 
-app.listen(3000, (err) => {
+app.listen(5050, (err) => {
     if (!err) {
-    console.log("[*]Server is listening on port 3000")
+    console.log("[*]Server is listening on port 5050")
     } else {
         console.log("An error has occured!")
     }
