@@ -68,6 +68,9 @@ const NewConnection = async (addr, user, password, port) => {
         const data = (await client.list()).length;
         return data;
 
+    } catch(err) {
+        console.log(`Unable to establist connection with ${addr}`);
+        return err.code;
     }
 }
 
