@@ -16,10 +16,10 @@ const Data = async (addr, user, password, port, folders) => {
         data = (await client.list()).length;
         let folderCount = {};
         let fileCountInFolder = 0;
-        for (let i = 0; i < folders.length; i++) {
-            await client.cd(folders[i]);
+        for (let i = 0; i < (folders.paths).length; i++) {
+            await client.cd(folders.paths[i]);
             fileCountInFolder = (await client.list()).length;
-            folderCount[folders[i]] = fileCountInFolder;
+            folderCount[folders.paths[i]] = fileCountInFolder;
             await client.cd("/");
         }
         // The total number of files in the server
@@ -67,7 +67,7 @@ const router = express.Router();
 
 router.get('/sendData/:address&:user&:password&:port&:folders', function(req, res) {
     
-    getData(req.params.address, req.params.user, req.params.password, req.params.port, (req.params.folders).split(',')).then(folderCount => {
+    getData(req.params.address, req.params.user, req.params.password, req.params.port, JSON.parse(req.params.folders)).then(folderCount => {
                 
         res.json(folderCount);
         console.log(`${req.params.address} total files is: ${folderCount.NumberOfFiles}`)
