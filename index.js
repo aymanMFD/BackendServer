@@ -52,6 +52,25 @@ const CheckFolder = async (addr, user, password, folderPath, port) => {
     }    
 }
 
+const NewConnection = async (addr, user, password, port) => {
+    const client = new Client();
+    client.ftp.verbose = false;
+
+    try {
+        await client.access({
+            host: addr,
+            user: user, 
+            password: password,
+            secure: false,
+            port: port
+        })
+
+        const data = (await client.list()).length;
+        return data;
+
+    }
+}
+
 const getFolderData = async (addr, user, password, folderPath, port) => {
     const result = await CheckFolder(addr, user, password, folderPath, port);
     return result;
@@ -62,6 +81,10 @@ const getData = async (addr, user, password, port, folders) => {
     return result;
 }
 
+const getNewConnection = async (addr, user, password, port) => {
+    const result = await NewConnection(addr, user, password, port);
+    return result;
+}
 const app = express();
 const router = express.Router();
 
@@ -79,6 +102,16 @@ router.get('/sendData/:address&:user&:password&:port&:folders', function(req, re
 router.get('/checkFolder/:address&:user&:password&:port&:folderPath', function(req, res) {
     getFolderData(req.params.address, req.params.user, req.params.password, req.params.folderPath, req.params.port).then(code => {
         console.log(`Checking folder ${req.params.folderPath}: ${code}`);
+        const data = {
+            code: code
+        }
+        res.json(data);
+    })
+})
+
+router.get('/checkConnection/:address&:user&:password&:port', function(req, res) {
+    getNewConnection(req.params.address, req.params.user, req.params.password, req.params.port).then(code => {
+        console.log(`Connection code with ${req.params.address1}: ${code}`);
         const data = {
             code: code
         }
