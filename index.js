@@ -65,12 +65,11 @@ const NewConnection = async (addr, user, password, port) => {
             port: port
         })
 
-        const data = (await client.list()).length;
-        return data;
+        return true;
 
     } catch(err) {
         console.log(`Unable to establist connection with ${addr}`);
-        return err.code;
+        return false;
     }
 }
 
@@ -103,10 +102,10 @@ router.get('/sendData/:address&:user&:password&:port&:folders', function(req, re
 });
 
 router.get('/checkFolder/:address&:user&:password&:port&:folderPath', function(req, res) {
-    getFolderData(req.params.address, req.params.user, req.params.password, req.params.folderPath, req.params.port).then(code => {
-        console.log(`Checking folder ${req.params.folderPath}: ${code}`);
+    getFolderData(req.params.address, req.params.user, req.params.password, req.params.folderPath, req.params.port).then(ans => {
+        console.log(`Connected to ${req.params.folderPath}: ${ans}`);
         const data = {
-            code: code
+            code: ans
         }
         res.json(data);
     })
@@ -114,7 +113,7 @@ router.get('/checkFolder/:address&:user&:password&:port&:folderPath', function(r
 
 router.get('/checkConnection/:address&:user&:password&:port', function(req, res) {
     getNewConnection(req.params.address, req.params.user, req.params.password, req.params.port).then(code => {
-        console.log(`Connection code with ${req.params.address1}: ${code}`);
+        console.log(`Connection code with ${req.params.address}: ${code}`);
         const data = {
             code: code
         }
