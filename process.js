@@ -1,24 +1,21 @@
 import { Client } from 'basic-ftp';
 
-example();
-
-async function example() {
-    const client = new Client()
-    client.ftp.verbose = false
+const CheckFolder = async (addr, user, password, folderPath, port) => {
+    const client = new Client();
+    
+    client.ftp.verbose = false;
     try {
         await client.access({
-            host: "ftp.scene.org",
-            user: "ftp",
-            password: "password",
-            secure: false
+            host: addr,
+            user: user,
+            password: password,
+            secure: false,
+            port: port
         })
-        
-        const x = await client.cd("/incoming/apply1212")
-        console.log(x.code);;
-        // console.log(await client.list())
-    }
-    catch(err) {
-        console.log(err.code)
-    }
-    client.close()
+        const response = await client.cd(folderPath);
+        console.log("Connected to ", folderPath);
+        return response.code
+    } catch (err) {
+        return err.code;
+    }    
 }
