@@ -17,7 +17,8 @@ const Data = async (addr, user, password, port, folders) => {
         let folderCount = {};
         let fileCountInFolder = 0;
         for (let i = 0; i < (folders.paths).length; i++) {
-            await client.cd(folders.paths[i]);
+            let processedFolderPath = folders.paths[i].replaceAll("#", "/");
+            await client.cd(processedFolderPath);
             fileCountInFolder = (await client.list()).length;
             folderCount[folders.paths[i]] = fileCountInFolder;
             await client.cd("/");
@@ -87,6 +88,8 @@ const getNewConnection = async (addr, user, password, port) => {
     const result = await NewConnection(addr, user, password, port);
     return result;
 }
+
+
 const app = express();
 const router = express.Router();
 
@@ -102,7 +105,8 @@ router.get('/sendData/:address&:user&:password&:port&:folders', function(req, re
 });
 
 router.get('/checkFolder/:address&:user&:password&:port&:folderPath', function(req, res) {
-    getFolderData(req.params.address, req.params.user, req.params.password, req.params.folderPath, req.params.port).then(ans => {
+    const folders = req.params.folderPath.replaceAll("#", "/");
+    getFolderData(req.params.address, req.params.user, req.params.password, folders, req.params.port).then(ans => {
         console.log(`Connected to ${req.params.folderPath}: ${ans}`);
         const data = {
             code: ans
